@@ -50,4 +50,16 @@ class Concentration {
             }
         }
     }
+    
+    func isOver() -> Bool {
+        var over = true
+        for index in cards.indices {
+            if !cards[index].isMatch {
+                over = false
+                break
+            }
+        }
+        
+        return over
+    }
 }

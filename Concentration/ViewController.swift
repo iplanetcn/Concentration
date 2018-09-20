@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     var emojiChoices = Array("🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐽🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🐛🦋🐌🐚🐞🐜🦗🕷🕸🦂🐢🐍🦎🦖🦕🐙🦑🦐🦀🐡🐠🐟🐬🐳🐋🦈🐊🐅🐆🦓🦍🐘🦏🐪🐫🦒🐃🐂🐄🐎🐖🐏🐑🐐🦌🐕🐩🐈🐓🦃🕊🐇🐁🐀🐿🦔🐾🐉🐲")
     
-    lazy var game:Concentration = Concentration(numberOfPairsOfCards: (cardButtons.count+1)/2)
+    lazy var game:Concentration = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,11 +62,43 @@ class ViewController: UIViewController {
                     let button = self.cardButtons[index]
                     let card = self.game.cards[index]
                     if card.isMatch {
-                        button.removeFromSuperview()
+                        button.isHidden = true
                     }
                 }
+                
+                self.checkGame()
             })
         }
+    }
+    
+    func checkGame() {
+        if (game.isOver()) {
+            let alert = UIAlertController(title: "", message: "Play Again?", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                switch action.style{
+                case .default:
+                    self.resetGame()
+                    break
+                    
+                case .cancel:
+                    print("cancel")
+                    break
+                    
+                case .destructive:
+                    print("destructive")
+                    break
+                }}))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func resetGame() {
+        game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+        for index in cardButtons.indices {
+            cardButtons[index].isHidden = false
+        }
+        
+        updateViewFromModel(at: -1)
     }
     
     var emoji = [Int:String]()
